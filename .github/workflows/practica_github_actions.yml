@@ -22,17 +22,13 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4
+        with:
+          node-version: 20
       - name: Install dependencies
         run: npm install
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@v5
-        with:
-          start: npm run dev
-          wait-on: http://localhost:3000
-          wait-on-timeout: 60
-        continue-on-error: true
-      - name: Save Cypress results
-        run: npm run cypress > result.txt || true
+      - name: Run Cypress tests and save results
+        run: |
+          npx start-server-and-test "npm run dev" http://localhost:3000 "npx cypress run > result.txt || true"
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
