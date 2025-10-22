@@ -1,0 +1,15 @@
+name: practica_github_actions
+on: [push]
+jobs:
+  linter_job:
+    name: Linter_job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+      - name: Install dependencies
+        run: npm install
+      - name: Run linter
+        run: npm run lint
