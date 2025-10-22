@@ -4,11 +4,11 @@ export default handler;
 
 function handler(req, res) {
   switch (req.method) {
-    case 'GET':
+    case "GET":
       return getUserById();
-    case 'PUT':
+    case "PUT":
       return updateUser();
-    case 'DELETE':
+    case "DELETE":
       return deleteUser();
     default:
       return res.status(405).end(`Method ${req.method} Not Allowed`);
