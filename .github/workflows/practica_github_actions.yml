@@ -34,7 +34,7 @@ jobs:
       - name: Save Cypress results
         run: npm run cypress > result.txt || true
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cypress-results
           path: result.txt
