@@ -43,6 +43,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.MY_PAT }}
       - name: Download cypress results artifact
         uses: actions/download-artifact@v4
         with:
@@ -60,25 +61,12 @@ jobs:
         uses: ./.github/actions/update-badge
         with:
           cypress_outcome: ${{ steps.parse.outputs.cypress_outcome }}
-      - name: Check if MY_PAT is available
-        run: |
-          if [ -z "${MY_PAT}" ]; then
-            echo "❌ MY_PAT is empty"
-            exit 1
-          else
-            echo "✅ MY_PAT is set (length: ${#MY_PAT})"
-          fi
-        env:
-          MY_PAT: ${{ secrets.MY_PAT }}
       - name: Commit and push README changes
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
           git add README.md
           git commit -m "ci: update Cypress test badge" || echo "No changes to commit"
-          git remote remove origin
-          git remote add origin https://x-access-token:${MY_PAT}@github.com/${{ github.repository }}.git
-          git remote -v
           git push origin HEAD:main
         env:
           MY_PAT: ${{ secrets.MY_PAT }}
