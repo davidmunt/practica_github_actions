@@ -34,3 +34,36 @@ jobs:
         with:
           name: cypress-results
           path: result.txt
+  add_badge_job:
+    name: Add_badge_job
+    runs-on: ubuntu-latest
+    needs: cypress_job
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download cypress results artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cypress-results
+          path: results
+      - name: Parse Cypress result and set output
+        id: parse
+        run: |
+          if grep -q -i "All specs passed" results/result.txt; then
+            echo "::set-output name=cypress_outcome::success"
+          else
+            echo "::set-output name=cypress_outcome::failure"
+          fi
+      - name: Update README badge using local action
+        uses: ./.github/actions/update-badge
+        with:
+          cypress_outcome: ${{ steps.parse.outputs.cypress_outcome }}
+      - name: Commit and push README changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "ci: update Cypress test badge" || echo "No changes to commit"
+          git push
