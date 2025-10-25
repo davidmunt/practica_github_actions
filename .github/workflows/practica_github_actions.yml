@@ -1,5 +1,9 @@
 name: practica_github_actions
-on: [push]
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "README.md"
 jobs:
   linter_job:
     name: Linter_job
@@ -38,6 +42,7 @@ jobs:
     name: Add_badge_job
     runs-on: ubuntu-latest
     needs: cypress_job
+    if: github.actor != 'github-actions[bot]'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
