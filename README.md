@@ -9,5 +9,6 @@ Example of nextjs project using Cypress.io
  
  
  
+ 
 ## RESULTAT DELS ÚLTIMS TESTS
 ![Tests Success](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)
