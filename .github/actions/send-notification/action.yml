@@ -1,0 +1,43 @@
+name: "Send Notification Email"
+description: "Envia un correu amb l'estat dels jobs del workflow"
+inputs:
+  recipient:
+    description: "Correu del destinatari"
+    required: true
+  subject:
+    description: "Assumpte del correu"
+    required: true
+  linter_status:
+    description: "Resultat del linter_job"
+    required: true
+  cypress_status:
+    description: "Resultat del cypress_job"
+    required: true
+  add_badge_status:
+    description: "Resultat del add_badge_job"
+    required: true
+  deploy_status:
+    description: "Resultat del deploy_job"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Install node dependencies
+      shell: bash
+      run: |
+        npm install --prefix "$GITHUB_ACTION_PATH" nodemailer
+    - name: Send email using Node script
+      shell: bash
+      env:
+        RECIPIENT: ${{ inputs.recipient }}
+        SUBJECT: ${{ inputs.subject }}
+        LINTER_STATUS: ${{ inputs.linter_status }}
+        CYPRESS_STATUS: ${{ inputs.cypress_status }}
+        ADD_BADGE_STATUS: ${{ inputs.add_badge_status }}
+        DEPLOY_STATUS: ${{ inputs.deploy_status }}
+        SMTP_HOST: ${{ env.SMTP_HOST }}
+        SMTP_PORT: ${{ env.SMTP_PORT }}
+        SMTP_USER: ${{ env.SMTP_USER }}
+        SMTP_PASS: ${{ env.SMTP_PASS }}
+      run: |
+        node "$GITHUB_ACTION_PATH/send.js"
