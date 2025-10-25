@@ -60,6 +60,16 @@ jobs:
         uses: ./.github/actions/update-badge
         with:
           cypress_outcome: ${{ steps.parse.outputs.cypress_outcome }}
+      - name: Check if MY_PAT is available
+        run: |
+          if [ -z "${MY_PAT}" ]; then
+            echo "❌ MY_PAT is empty"
+            exit 1
+          else
+            echo "✅ MY_PAT is set (length: ${#MY_PAT})"
+          fi
+        env:
+          MY_PAT: ${{ secrets.MY_PAT }}
       - name: Commit and push README changes
         run: |
           git config --global user.name "github-actions"
