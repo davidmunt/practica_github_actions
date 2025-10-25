@@ -1,0 +1,24 @@
+name: "Update Cypress Badge"
+description: ""
+inputs:
+  cypress_outcome:
+    description: ""
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Update README badge
+      shell: bash
+      run: |
+        echo "Resultat dels tests: ${{ inputs.cypress_outcome }}"
+        if [ ! -f README.md ]; then
+          echo "# Projecte" > README.md
+        fi
+        sed -i '/RESULTAT DELS ÚLTIMS TESTS/,$d' README.md
+        echo " " >> README.md
+        echo "## RESULTAT DELS ÚLTIMS TESTS" >> README.md
+        if [ "${{ inputs.cypress_outcome }}" = "success" ]; then
+          echo "![Tests Success](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)" >> README.md
+        else
+          echo "![Tests Failure](https://img.shields.io/badge/test-failure-red)" >> README.md
+        fi
