@@ -101,6 +101,8 @@ jobs:
       - deploy_job
     if: always()
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Run notification action (send email)
         uses: ./.github/actions/send-notification
         with:
